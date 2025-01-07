@@ -2,7 +2,7 @@
 
 ## Project's Description
 
-Front-end project developed through a selection process at taqtile.
+Front-end project developed through a selection process at instaq.
 
 ## Environment and tools
 
