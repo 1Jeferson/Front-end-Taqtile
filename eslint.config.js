@@ -1,10 +1,12 @@
 // @ts-check
 
 import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
+import { configs as tsConfigs } from "@typescript-eslint/eslint-plugin";
 
-export default tseslint.config(
-  eslint.configs.recommended,
-  tseslint.configs.strict,
-  tseslint.configs.stylistic
-);
+export default {
+  ...eslint.configs.recommended,
+  ...tsConfigs.recommended,
+  ...tsConfigs.strict,
+  ...tsConfigs.stylistic,
+  
+};
