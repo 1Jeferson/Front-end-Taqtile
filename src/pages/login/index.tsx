@@ -3,7 +3,7 @@ import Button from '../../components/button';
 const Login = () => {
   return (
     <div className='flex flex-col justify-center items-center gap-8 mt-8 p-10 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-[40%] m-auto rounded-2xl '>
-      <h2 className='text-2xl font-semibold'>Bem-vindo(a) a Taqtile</h2>
+      <h2 className='text-2xl font-semibold'>Bem-vindo(a) a Instaq</h2>
 
       <form className='flex flex-col justify-center items-center w-full gap-6'>
         <input
