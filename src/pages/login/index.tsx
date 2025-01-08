@@ -13,12 +13,15 @@ const Login = () => {
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
+
     if (!email) {
-      newErrors.email = 'E-mail é obrigatório';
+      newErrors.email = 'E-mail é obrigatório.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Por favor, insira um e-mail válido.';
     }
 
     if (!password) {
-      newErrors.password = 'Senha é obrigatório';
+      newErrors.password = 'Senha é obrigatória.';
     } else if (password.length < 7) {
       newErrors.password = 'Senha deve ter no mínimo 7 caracteres.';
     } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
@@ -38,8 +41,8 @@ const Login = () => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center gap-8 mt-8 p-10 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-[40%] m-auto rounded-2xl '>
-      <div className='flex flex-col justify-center items-center w-full h-1/2 p-8 rounded-2xl '>
+    <div className='flex flex-col justify-center items-center gap-8 mt-8 p-10 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-[40%] m-auto rounded-2xl'>
+      <div className='flex flex-col justify-center items-center w-full h-1/2 p-8 rounded-2xl'>
         <h2 className='text-2xl text-center font-semibold py-4'>Bem-vindo(a) a Instaq</h2>
 
         <form className='flex flex-col justify-center items-center w-full gap-6' onSubmit={handleSubmit}>
@@ -54,6 +57,7 @@ const Login = () => {
                 errors.email ? 'border-red-500' : 'border-indigo-500',
               )}
             />
+
             <ErrorMessage message={errors.email} />
           </div>
 
@@ -65,11 +69,13 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               className={twMerge(
                 'p-3 rounded-2xl w-full border-2 text-lg focus:outline-none',
-                errors.email ? 'border-red-500' : 'border-indigo-500',
+                errors.password ? 'border-red-500' : 'border-indigo-500',
               )}
             />
+
             <ErrorMessage message={errors.password} />
           </div>
+
           <Button>Entrar</Button>
         </form>
       </div>
