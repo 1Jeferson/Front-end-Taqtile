@@ -1,10 +1,7 @@
 import { z } from 'zod';
 
 export const ValidationLoginSchema = z.object({
-  email: z
-    .string()
-    .nonempty({ message: 'E-mail é obrigatório.' })
-    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Por favor, insira um e-mail válido.' }),
+  email: z.string().email({ message: 'Por favor, insira um e-mail válido.' }),
   password: z
     .string()
     .nonempty({ message: 'Senha é obrigatória.' })
