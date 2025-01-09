@@ -14,18 +14,19 @@ const Login = () => {
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/.test(password);
+
     if (!email) {
       newErrors.email = 'E-mail é obrigatório.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!emailRegex) {
       newErrors.email = 'Por favor, insira um e-mail válido.';
     }
 
     if (!password) {
       newErrors.password = 'Senha é obrigatória.';
-    } else if (password.length < 7) {
-      newErrors.password = 'Senha deve ter no mínimo 7 caracteres.';
-    } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
-      newErrors.password = 'Senha deve conter pelo menos um número e uma letra.';
+    } else if (!passwordRegex) {
+      newErrors.password = 'A senha deve conter pelo menos um número e uma letra, e ter no mínimo 7 caracteres.';
     }
 
     setErrors(newErrors);
