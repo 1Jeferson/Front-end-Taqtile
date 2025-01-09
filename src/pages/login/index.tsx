@@ -1,19 +1,19 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
 import { twMerge } from 'tailwind-merge';
-import { ValidationLoginSchema } from '../../schemas';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '../../components/button';
 import ErrorMessage from '../../components/message';
-import { useState } from 'react';
-
+import { LOGIN } from '../../graphql/mutation';
+import { ValidationLoginSchema } from '../../schemas';
+import LoadingSpinner from '../../components/loading';
+import { useNavigate } from 'react-router-dom';
 interface LoginData {
   email: string;
   password: string;
 }
 
 const Login = () => {
-  const [error, setError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
@@ -22,14 +22,28 @@ const Login = () => {
     resolver: zodResolver(ValidationLoginSchema),
   });
 
-  const onSubmit = async (data: LoginData) => {
-    setError(null);
+  const navigate = useNavigate();
 
+  const [login, { loading, error }] = useMutation(LOGIN, {
+    onCompleted: (data) => {
+      localStorage.setItem('authToken', data.login.token);
+      navigate('/user-list');
+    },
+  });
+
+  const onSubmit = async (data: LoginData) => {
     try {
-      console.log(data);
+      const response = await login({
+        variables: {
+          data,
+        },
+      });
+
+      const token = response.data.login.token;
+
+      localStorage.setItem('authToken', token);
     } catch (err) {
-      setError('Falha ao fazer login. Tente novamente.');
-    } finally {
+      console.error('Erro no login:', err);
     }
   };
 
@@ -65,9 +79,9 @@ const Login = () => {
             <ErrorMessage message={errors.password?.message} />
           </div>
 
-          {error && <ErrorMessage message={error} />}
+          {error && <ErrorMessage message={error.message} />}
 
-          <Button>Entrar</Button>
+          <Button disabled={loading}>{loading ? <LoadingSpinner /> : 'Entrar'}</Button>
         </form>
       </div>
     </div>
