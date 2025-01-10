@@ -4,7 +4,7 @@ import { AuthRoute } from './auth';
 import UserList from '../pages/user-list';
 
 export const AppRoutes = () => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem('token');
 
   return (
     <Routes>
