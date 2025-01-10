@@ -1,10 +1,14 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
 import { twMerge } from 'tailwind-merge';
-import { ValidationLoginSchema } from '../../schemas';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/button';
 import ErrorMessage from '../../components/message';
-import { useState } from 'react';
+import { LOGIN } from '../../graphql/mutation';
+import { ValidationLoginSchema } from '../../schemas';
+import LoadingSpinner from '../../components/loading';
 
 interface LoginData {
   email: string;
@@ -12,8 +16,6 @@ interface LoginData {
 }
 
 const Login = () => {
-  const [error, setError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
@@ -22,15 +24,30 @@ const Login = () => {
     resolver: zodResolver(ValidationLoginSchema),
   });
 
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+
+  const [login, { loading }] = useMutation(LOGIN, {
+    onCompleted: (data) => {
+      localStorage.setItem('authToken', data.login.token);
+      navigate('/user-list');
+    },
+    onError: (err) => {
+      console.error('Erro no login:', err);
+      setError('Falha ao fazer login. Tente novamente.');
+    },
+  });
+
   const onSubmit = async (data: LoginData) => {
     setError(null);
 
     try {
-      console.log(data);
-    } catch (err) {
-      setError('Falha ao fazer login. Tente novamente.');
-    } finally {
-    }
+      await login({
+        variables: {
+          data,
+        },
+      });
+    } catch {}
   };
 
   return (
@@ -67,7 +84,7 @@ const Login = () => {
 
           {error && <ErrorMessage message={error} />}
 
-          <Button>Entrar</Button>
+          <Button disabled={loading}>{loading ? <LoadingSpinner /> : 'Entrar'}</Button>
         </form>
       </div>
     </div>
