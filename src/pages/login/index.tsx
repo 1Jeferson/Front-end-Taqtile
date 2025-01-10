@@ -8,6 +8,8 @@ import { LOGIN } from '../../graphql/mutation';
 import { ValidationLoginSchema } from '../../schemas';
 import LoadingSpinner from '../../components/loading';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+
 interface LoginData {
   email: string;
   password: string;
@@ -23,28 +25,29 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
-  const [login, { loading, error }] = useMutation(LOGIN, {
+  const [login, { loading }] = useMutation(LOGIN, {
     onCompleted: (data) => {
       localStorage.setItem('authToken', data.login.token);
       navigate('/user-list');
     },
+    onError: (err) => {
+      console.error('Erro no login:', err);
+      setError('Falha ao fazer login. Tente novamente.');
+    },
   });
 
   const onSubmit = async (data: LoginData) => {
+    setError(null);
+
     try {
-      const response = await login({
+      await login({
         variables: {
           data,
         },
       });
-
-      const token = response.data.login.token;
-
-      localStorage.setItem('authToken', token);
-    } catch (err) {
-      console.error('Erro no login:', err);
-    }
+    } catch {}
   };
 
   return (
@@ -79,7 +82,7 @@ const Login = () => {
             <ErrorMessage message={errors.password?.message} />
           </div>
 
-          {error && <ErrorMessage message={error.message} />}
+          {error && <ErrorMessage message={error} />}
 
           <Button disabled={loading}>{loading ? <LoadingSpinner /> : 'Entrar'}</Button>
         </form>
