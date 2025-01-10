@@ -29,7 +29,7 @@ const Login = () => {
 
   const [login, { loading }] = useMutation(LOGIN, {
     onCompleted: (data) => {
-      localStorage.setItem('authToken', data.login.token);
+      localStorage.setItem('token', data.login.token);
       navigate('/user-list');
     },
     onError: (err) => {
