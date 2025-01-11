@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client';
-import { useEffect } from 'react';
 import { USERS } from '../../graphql/query';
 import { IListUsers } from '../../interface';
 import LoadingSpinner from '../../components/loading';
@@ -16,14 +15,21 @@ const UserList = () => {
     },
   });
 
-  useEffect(() => {
-    if (error) {
-      console.error('Erro da consulta:', error);
-    }
-  }, [error]);
+  if (loading)
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <LoadingSpinner />
+      </div>
+    );
 
-  if (loading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage message='Erro ao carregar a lista de usuários.' />;
+  if (error) {
+    const apiErrorMessage = error.graphQLErrors?.[0]?.message;
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <ErrorMessage message={apiErrorMessage} />
+      </div>
+    );
+  }
 
   return (
     <div className='flex justify-center items-center min-h-screen p-6'>
@@ -42,11 +48,7 @@ const UserList = () => {
               {data?.users.nodes.map((user) => (
                 <tr key={user.id} className='border-b'>
                   <td className='px-4 py-2'>{user.name}</td>
-                  <td className='px-4 py-2'>
-                    <div className='flex items-center justify-between'>
-                      <span className='truncate max-w-xs'>{user.email}</span>
-                    </div>
-                  </td>
+                  <td className='px-4 py-2'>{user.email}</td>
                 </tr>
               ))}
             </tbody>
