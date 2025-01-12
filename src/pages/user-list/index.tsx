@@ -3,11 +3,21 @@ import { USERS } from '../../graphql/query';
 import { IListUsers } from '../../interface';
 import LoadingSpinner from '../../components/loading';
 import ErrorMessage from '../../components/message';
+import { useState } from 'react';
+import Button from '../../components/button';
 
 const UserList = () => {
   const token = localStorage.getItem('token');
+  const [offset, setOffset] = useState(0);
+  const limit = 20;
 
   const { data, loading, error } = useQuery<IListUsers>(USERS, {
+    variables: {
+      userData: {
+        offset: offset,
+        limit: limit,
+      },
+    },
     context: {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -15,12 +25,27 @@ const UserList = () => {
     },
   });
 
-  if (loading)
+  const handleNextPage = () => {
+    if (data?.users?.pageInfo?.hasNextPage) {
+      setOffset((prevOffset) => prevOffset + limit);
+    }
+  };
+
+  const pageInfo = data?.users?.pageInfo;
+
+  const handlePrevPage = () => {
+    if (data?.users?.pageInfo?.hasPreviousPage) {
+      setOffset((prevOffset) => Math.max(prevOffset - limit, 0));
+    }
+  };
+
+  if (loading) {
     return (
       <div className='flex items-center justify-center min-h-screen'>
         <LoadingSpinner />
       </div>
     );
+  }
 
   if (error) {
     const apiErrorMessage = error.graphQLErrors?.[0]?.message;
@@ -30,6 +55,10 @@ const UserList = () => {
       </div>
     );
   }
+
+  const currentPage = Math.floor(offset / limit) + 1;
+  const totalCount = data?.users?.count || 0;
+  const totalPages = Math.ceil(totalCount / limit);
 
   return (
     <div className='flex justify-center items-center min-h-screen p-6'>
@@ -53,6 +82,28 @@ const UserList = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className='flex justify-between items-center mt-4'>
+          <Button
+            onClick={handlePrevPage}
+            disabled={offset === 0}
+            variant={offset === 0 ? 'disabled' : 'primary'}
+            className='px-4 py-2 rounded-md'
+          >
+            Anterior
+          </Button>
+          <span className='text-gray-700'>
+            Página {currentPage} de {totalPages}
+          </span>
+          <Button
+            onClick={handleNextPage}
+            disabled={!pageInfo?.hasNextPage}
+            variant={!pageInfo?.hasNextPage ? 'disabled' : 'primary'}
+            className='px-4 py-2 rounded-md'
+          >
+            Próximo
+          </Button>
         </div>
       </div>
     </div>
