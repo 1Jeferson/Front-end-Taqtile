@@ -84,7 +84,9 @@ const Login = () => {
 
           {error && <ErrorMessage message={error} />}
 
-          <Button disabled={loading}>{loading ? <LoadingSpinner /> : 'Entrar'}</Button>
+          <Button className='w-full' disabled={loading}>
+            {loading ? <LoadingSpinner /> : 'Entrar'}
+          </Button>
         </form>
       </div>
     </div>
