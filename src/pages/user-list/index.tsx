@@ -5,11 +5,14 @@ import LoadingSpinner from '../../components/loading';
 import ErrorMessage from '../../components/message';
 import { useState } from 'react';
 import Button from '../../components/button';
+import { useNavigate } from 'react-router-dom';
 
 const UserList = () => {
   const token = localStorage.getItem('token');
   const [offset, setOffset] = useState(0);
   const limit = 20;
+
+  const navigate = useNavigate();
 
   const { data, loading, error } = useQuery<IListUsers>(USERS, {
     variables: {
@@ -89,7 +92,7 @@ const UserList = () => {
             onClick={handlePrevPage}
             disabled={offset === 0}
             variant={offset === 0 ? 'disabled' : 'primary'}
-            className='px-4 py-2 rounded-md'
+            className='px-4 py-2'
           >
             Anterior
           </Button>
@@ -100,9 +103,16 @@ const UserList = () => {
             onClick={handleNextPage}
             disabled={!pageInfo?.hasNextPage}
             variant={!pageInfo?.hasNextPage ? 'disabled' : 'primary'}
-            className='px-4 py-2 rounded-md'
+            className='px-4 py-2'
           >
             Próximo
+          </Button>
+          <Button
+            onClick={() => navigate('/add-user')}
+            variant='primary'
+            className='fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-2xl'
+          >
+            +
           </Button>
         </div>
       </div>

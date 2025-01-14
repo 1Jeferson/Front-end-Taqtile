@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from '../pages/login';
 import { AuthRoute } from './auth';
 import UserList from '../pages/user-list';
+import AddUser from '../pages/add-user';
 
 export const AppRoutes = () => {
   const token = localStorage.getItem('token');
@@ -12,6 +13,7 @@ export const AppRoutes = () => {
 
       <Route element={<AuthRoute />}>
         <Route path='/user-list' element={<UserList />} />
+        <Route path='/add-user' element={<AddUser />} />
       </Route>
     </Routes>
   );

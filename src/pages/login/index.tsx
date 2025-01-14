@@ -2,7 +2,6 @@ import { useMutation } from '@apollo/client';
 import { twMerge } from 'tailwind-merge';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/button';
 import ErrorMessage from '../../components/message';
@@ -25,22 +24,15 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
 
-  const [login, { loading }] = useMutation(LOGIN, {
+  const [login, { loading, error }] = useMutation(LOGIN, {
     onCompleted: (data) => {
       localStorage.setItem('token', data.login.token);
       navigate('/user-list');
     },
-    onError: (err) => {
-      console.error('Erro no login:', err);
-      setError('Falha ao fazer login. Tente novamente.');
-    },
   });
 
   const onSubmit = async (data: LoginData) => {
-    setError(null);
-
     try {
       await login({
         variables: {
@@ -62,7 +54,7 @@ const Login = () => {
               placeholder='E-mail'
               {...register('email')}
               className={twMerge(
-                'p-3 rounded-2xl w-full border-2 text-lg focus:outline-none',
+                'p-3 rounded-md w-full border-2 text-lg focus:outline-none',
                 errors.email ? 'border-red-500' : 'border-indigo-500',
               )}
             />
@@ -75,14 +67,14 @@ const Login = () => {
               placeholder='Senha'
               {...register('password')}
               className={twMerge(
-                'p-3 rounded-2xl w-full border-2 text-lg focus:outline-none',
+                'p-3 rounded-md w-full border-2 text-lg focus:outline-none',
                 errors.password ? 'border-red-500' : 'border-indigo-500',
               )}
             />
             <ErrorMessage message={errors.password?.message} />
           </div>
 
-          {error && <ErrorMessage message={error} />}
+          {error && <ErrorMessage message={error.message} />}
 
           <Button className='w-full' disabled={loading}>
             {loading ? <LoadingSpinner /> : 'Entrar'}
