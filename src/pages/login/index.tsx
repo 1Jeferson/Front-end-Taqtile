@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client';
-import { twMerge } from 'tailwind-merge';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/button';
 import ErrorMessage from '../../components/message';
-import { LOGIN } from '../../graphql/mutation';
+import { LOGIN_MUTATION } from '../../graphql/mutation';
 import { ValidationLoginSchema } from '../../schemas';
 import LoadingSpinner from '../../components/loading';
+import Input from '../../components/input';
 
 interface LoginData {
   email: string;
@@ -25,7 +25,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const [login, { loading, error }] = useMutation(LOGIN, {
+  const [login, { loading, error }] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
       localStorage.setItem('token', data.login.token);
       navigate('/user-list');
@@ -48,31 +48,20 @@ const Login = () => {
         <h2 className='text-2xl text-center font-semibold py-4 text-green-950'>Bem-vindo(a) a Instaq</h2>
 
         <form className='flex flex-col justify-center items-center w-full gap-6' onSubmit={handleSubmit(onSubmit)}>
-          <div className='w-full'>
-            <input
-              type='email'
-              placeholder='E-mail'
-              {...register('email')}
-              className={twMerge(
-                'p-3 rounded-md w-full border-2 text-lg focus:outline-none',
-                errors.email ? 'border-red-500' : 'border-indigo-500',
-              )}
-            />
-            <ErrorMessage message={errors.email?.message} />
-          </div>
-
-          <div className='w-full'>
-            <input
-              type='password'
-              placeholder='Senha'
-              {...register('password')}
-              className={twMerge(
-                'p-3 rounded-md w-full border-2 text-lg focus:outline-none',
-                errors.password ? 'border-red-500' : 'border-indigo-500',
-              )}
-            />
-            <ErrorMessage message={errors.password?.message} />
-          </div>
+          <Input
+            type='email'
+            name='email'
+            placeholder='E-mail'
+            register={register}
+            errorMessage={errors.email?.message}
+          />
+          <Input
+            type='password'
+            name='password'
+            placeholder='Senha'
+            register={register}
+            errorMessage={errors.password?.message}
+          />
 
           {error && <ErrorMessage message={error.message} />}
 

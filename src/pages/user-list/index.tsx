@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { USERS } from '../../graphql/query';
+import { QUERY_USERS } from '../../graphql/query';
 import { IListUsers } from '../../interface';
 import LoadingSpinner from '../../components/loading';
 import ErrorMessage from '../../components/message';
@@ -14,7 +14,7 @@ const UserList = () => {
 
   const navigate = useNavigate();
 
-  const { data, loading, error } = useQuery<IListUsers>(USERS, {
+  const { data, loading, error } = useQuery<IListUsers>(QUERY_USERS, {
     variables: {
       userData: {
         offset: offset,
@@ -88,28 +88,17 @@ const UserList = () => {
         </div>
 
         <div className='flex justify-between items-center mt-4'>
-          <Button
-            onClick={handlePrevPage}
-            disabled={offset === 0}
-            variant={offset === 0 ? 'disabled' : 'primary'}
-            className='px-4 py-2'
-          >
+          <Button onClick={handlePrevPage} disabled={offset === 0}>
             Anterior
           </Button>
           <span className='text-gray-700'>
             Página {currentPage} de {totalPages}
           </span>
-          <Button
-            onClick={handleNextPage}
-            disabled={!pageInfo?.hasNextPage}
-            variant={!pageInfo?.hasNextPage ? 'disabled' : 'primary'}
-            className='px-4 py-2'
-          >
+          <Button onClick={handleNextPage} disabled={!pageInfo?.hasNextPage}>
             Próximo
           </Button>
           <Button
             onClick={() => navigate('/add-user')}
-            variant='primary'
             className='fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-2xl'
           >
             +
