@@ -15,7 +15,7 @@ const Button = ({ className, children, variant = 'primary', ...rest }: ButtonPro
   return (
     <button
       className={twMerge(
-        'px-7 py-4 rounded-2xl font-bold transition-all duration-300',
+        'px-7 py-4 rounded-md font-bold transition-all duration-300',
         variantStyles[variant],
         className,
       )}
