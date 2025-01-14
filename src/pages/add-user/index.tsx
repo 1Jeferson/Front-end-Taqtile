@@ -1,7 +1,7 @@
 import LoadingSpinner from '../../components/loading';
 import ErrorMessage from '../../components/message';
 import Button from '../../components/button';
-import Input from '../../components/input'; // Importando o componente Input
+import Input from '../../components/input';
 import { IUser } from '../../interface';
 import { QUERY_USERS } from '../../graphql/query';
 import { twMerge } from 'tailwind-merge';
