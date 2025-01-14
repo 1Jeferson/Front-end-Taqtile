@@ -8,18 +8,14 @@ import { LOGIN_MUTATION } from '../../graphql/mutation';
 import { ValidationLoginSchema } from '../../schemas';
 import LoadingSpinner from '../../components/loading';
 import Input from '../../components/input';
-
-interface LoginData {
-  email: string;
-  password: string;
-}
+import { IUser } from '../../interface';
 
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginData>({
+  } = useForm<IUser>({
     resolver: zodResolver(ValidationLoginSchema),
   });
 
@@ -32,7 +28,7 @@ const Login = () => {
     },
   });
 
-  const onSubmit = async (data: LoginData) => {
+  const onSubmit = async (data: IUser) => {
     try {
       await login({
         variables: {
