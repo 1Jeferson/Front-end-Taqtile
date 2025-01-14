@@ -2,6 +2,10 @@ export interface IUser {
   id: string;
   name: string;
   email: string;
+  password: string;
+  phone: string;
+  birthDate: string;
+  role: 'admin' | 'user';
 }
 
 export interface IListUsers {
