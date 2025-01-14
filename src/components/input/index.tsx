@@ -1,12 +1,14 @@
+import { UseFormRegister } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import ErrorMessage from '../message';
+import { IUser } from '../../interface';
 
 interface InputProps {
   type: string;
   placeholder: string;
   errorMessage?: string;
-  register: any;
-  name: string;
+  register: UseFormRegister<IUser>;
+  name: keyof IUser;
 }
 
 const Input = ({ type, placeholder, errorMessage, register, name }: InputProps) => {
