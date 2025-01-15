@@ -5,7 +5,7 @@ export interface IUser {
   password: string;
   phone: string;
   birthDate: string;
-  role: 'admin' | 'user';
+  role: string;
 }
 
 export interface IListUsers {
