@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { QUERY_USERS } from '../../graphql/query';
+import { USERS_QUERY } from '../../graphql/query';
 import { IListUsers } from '../../interface';
 import LoadingSpinner from '../../components/loading';
 import ErrorMessage from '../../components/message';
@@ -8,22 +8,16 @@ import Button from '../../components/button';
 import { useNavigate } from 'react-router-dom';
 
 const UserList = () => {
-  const token = localStorage.getItem('token');
   const [offset, setOffset] = useState(0);
   const limit = 20;
 
   const navigate = useNavigate();
 
-  const { data, loading, error } = useQuery<IListUsers>(QUERY_USERS, {
+  const { data, loading, error } = useQuery<IListUsers>(USERS_QUERY, {
     variables: {
       userData: {
         offset: offset,
         limit: limit,
-      },
-    },
-    context: {
-      headers: {
-        Authorization: `Bearer ${token}`,
       },
     },
   });

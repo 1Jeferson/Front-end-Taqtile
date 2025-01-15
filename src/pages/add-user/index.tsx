@@ -1,16 +1,17 @@
-import LoadingSpinner from '../../components/loading';
-import ErrorMessage from '../../components/message';
-import Button from '../../components/button';
-import Input from '../../components/input';
-import { IUser } from '../../interface';
-import { QUERY_USERS } from '../../graphql/query';
-import { twMerge } from 'tailwind-merge';
+import { useState } from 'react';
+import { ValidationCreateUserSchema } from '../../schemas';
 import { useForm } from 'react-hook-form';
-import { REGISTER_MUTATION } from '../../graphql/mutation';
-import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { ValidationCreateUserSchema } from '../../schemas';
+import { useMutation } from '@apollo/client';
+import { twMerge } from 'tailwind-merge';
+import { IUser } from '../../interface';
+import { USERS_QUERY } from '../../graphql/query';
+import { REGISTER_MUTATION } from '../../graphql/mutation';
+import Button from '../../components/button';
+import Input from '../../components/input';
+import ErrorMessage from '../../components/message';
+import LoadingSpinner from '../../components/loading';
 
 const AddUser = () => {
   const {
@@ -23,19 +24,21 @@ const AddUser = () => {
 
   const navigate = useNavigate();
 
-  const [registerUser, { loading, error }] = useMutation(REGISTER_MUTATION, {
+  const [error, setError] = useState<string | null>(null);
+
+  const [registerUser, { loading }] = useMutation(REGISTER_MUTATION, {
     onCompleted: () => {
       navigate('/user-list');
     },
-    refetchQueries: [{ query: QUERY_USERS }],
+    onError: () => {
+      setError('Erro ao adicionar usuário. Tente novamente.');
+    },
+    refetchQueries: [{ query: USERS_QUERY }],
   });
 
   const onSubmit = async (data: IUser) => {
-    try {
-      await registerUser({ variables: { createUser: data } });
-    } catch (error) {
-      console.log('Erro ao adcionar usuário', error);
-    }
+    setError(null);
+    await registerUser({ variables: { createUser: data } });
   };
 
   return (
@@ -47,17 +50,11 @@ const AddUser = () => {
         <h2 className='text-2xl text-center font-semibold py-4 text-green-950'>Adicionar Novo Usuário</h2>
 
         <form className='flex flex-col justify-center items-center w-full gap-6' onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            type='text'
-            name='name'
-            placeholder='Nome Completo'
-            register={register}
-            errorMessage={errors.name?.message}
-          />
+          <Input type='text' name='name' placeholder='Nome' register={register} errorMessage={errors.name?.message} />
           <Input
             type='email'
             name='email'
-            placeholder='E-mail'
+            placeholder='Email'
             register={register}
             errorMessage={errors.email?.message}
           />
@@ -69,7 +66,7 @@ const AddUser = () => {
             errorMessage={errors.password?.message}
           />
           <Input
-            type='tel'
+            type='text'
             name='phone'
             placeholder='Telefone'
             register={register}
@@ -97,7 +94,7 @@ const AddUser = () => {
             <ErrorMessage message={errors.role?.message} />
           </div>
 
-          {error && <ErrorMessage message={error.message} />}
+          {error && <ErrorMessage message={error} />}
 
           <Button className='w-full' disabled={loading}>
             {loading ? <LoadingSpinner /> : 'Adicionar Usuário'}
