@@ -33,7 +33,9 @@ const AddUser = () => {
   const onSubmit = async (data: IUser) => {
     try {
       await registerUser({ variables: { createUser: data } });
-    } catch (error) {}
+    } catch (error) {
+      console.log('Erro ao adcionar usuário', error);
+    }
   };
 
   return (

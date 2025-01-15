@@ -35,7 +35,9 @@ const Login = () => {
           data,
         },
       });
-    } catch {}
+    } catch (error) {
+      console.log('Erro ao fazer login', error);
+    }
   };
 
   return (
