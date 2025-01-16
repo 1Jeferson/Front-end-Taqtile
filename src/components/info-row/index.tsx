@@ -1,9 +1,9 @@
-interface UserInfoProps {
+interface InfoRowProps {
   label: string;
   value: string;
 }
 
-const UserInfo = ({ label, value }: UserInfoProps) => {
+const InfoRow = ({ label, value }: InfoRowProps) => {
   return (
     <div className='flex justify-between items-center'>
       <span className='font-semibold text-gray-700'>{label}</span>
@@ -12,4 +12,4 @@ const UserInfo = ({ label, value }: UserInfoProps) => {
   );
 };
 
-export default UserInfo;
+export default InfoRow;

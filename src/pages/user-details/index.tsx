@@ -4,7 +4,7 @@ import { USER_BY_ID_QUERY } from '../../graphql/query';
 import LoadingSpinner from '../../components/loading';
 import ErrorMessage from '../../components/message';
 import Button from '../../components/button';
-import UserInfo from '../../components/user-info';
+import InfoRow from '../../components/info-row';
 
 const UserDetails = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -40,11 +40,11 @@ const UserDetails = () => {
         <h2 className='text-2xl font-semibold text-center mb-6 text-green-950'>Detalhes do Usuário</h2>
 
         <div className='space-y-4'>
-          <UserInfo label='Nome' value={data?.user?.name} />
-          <UserInfo label='E-mail' value={data?.user?.email} />
-          <UserInfo label='Telefone' value={data?.user?.phone} />
-          <UserInfo label='Data de Nascimento' value={data?.user?.birthDate} />
-          <UserInfo label='Função' value={data?.user?.role} />
+          <InfoRow label='Nome' value={data?.user?.name} />
+          <InfoRow label='E-mail' value={data?.user?.email} />
+          <InfoRow label='Telefone' value={data?.user?.phone} />
+          <InfoRow label='Data de Nascimento' value={data?.user?.birthDate} />
+          <InfoRow label='Função' value={data?.user?.role} />
         </div>
       </div>
     </div>
