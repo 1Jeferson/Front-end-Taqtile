@@ -3,6 +3,7 @@ import Login from '../pages/login';
 import { AuthRoute } from './auth';
 import UserList from '../pages/user-list';
 import AddUser from '../pages/add-user';
+import UserDetails from '../pages/user-details';
 
 export const AppRoutes = () => {
   const token = localStorage.getItem('token');
@@ -14,6 +15,7 @@ export const AppRoutes = () => {
       <Route element={<AuthRoute />}>
         <Route path='/user-list' element={<UserList />} />
         <Route path='/add-user' element={<AddUser />} />
+        <Route path='/user-details/:userId' element={<UserDetails />} />
       </Route>
     </Routes>
   );

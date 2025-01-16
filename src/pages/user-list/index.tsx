@@ -36,6 +36,10 @@ const UserList = () => {
     }
   };
 
+  const handleUserDetails = (userId: string) => {
+    navigate(`/user-details/${userId}`);
+  };
+
   if (loading) {
     return (
       <div className='flex items-center justify-center min-h-screen'>
@@ -58,27 +62,31 @@ const UserList = () => {
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    <div className='flex justify-center items-center min-h-screen p-6'>
+    <div className='flex justify-center items-center p-6'>
       <div className='w-full max-w-4xl bg-white p-6 rounded-lg shadow-md'>
         <h2 className='text-2xl font-semibold text-center mb-4 text-green-950'>Lista de Usuários</h2>
 
-        <div className='overflow-x-auto'>
-          <table className='min-w-full table-auto border-collapse'>
-            <thead>
-              <tr>
-                <th className='px-4 py-2 text-left border-b font-semibold'>Nome</th>
-                <th className='px-4 py-2 text-left border-b font-semibold'>E-mail</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.users.nodes.map((user) => (
-                <tr key={user.id} className='border-b'>
-                  <td className='px-4 py-2'>{user.name}</td>
-                  <td className='px-4 py-2'>{user.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className='space-y-6'>
+          {data?.users.nodes.map((user) => (
+            <div key={user.id} className='flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-4'>
+              <div className='flex flex-col sm:flex-row w-full sm:w-2/3 gap-4'>
+                <div className='flex flex-col w-full'>
+                  <span className='font-semibold text-gray-600'>Nome</span>
+                  <span>{user.name}</span>
+                </div>
+                <div className='flex flex-col w-full'>
+                  <span className='font-semibold text-gray-600'>E-mail</span>
+                  <span>{user.email}</span>
+                </div>
+              </div>
+
+              <div className='mt-4 sm:mt-0 sm:flex sm:items-center'>
+                <Button className='w-full sm:w-auto' onClick={() => handleUserDetails(user.id)}>
+                  Detalhes
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className='flex justify-between items-center mt-4'>
@@ -91,6 +99,7 @@ const UserList = () => {
           <Button onClick={handleNextPage} disabled={!pageInfo?.hasNextPage}>
             Próximo
           </Button>
+
           <Button
             onClick={() => navigate('/add-user')}
             className='fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-2xl'
