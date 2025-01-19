@@ -49,3 +49,17 @@ npm install
 ```
 npm run dev
 ```
+
+- **login data**
+
+**Email**:
+
+```
+admin@taqtile.com.br
+```
+
+**Password**:
+
+```
+1234qwer
+```
